@@ -27,6 +27,12 @@ class Retsu(Config):
         d = d.css(".summary_image img")
         
         return d["data-src"]
+    
+    @jidouteki.series.title
+    def _series_title(self, series): 
+        d = self._fetch_series(series)
+        d = d.css("h1.post-title").pop()        
+        return d.get_text()
 
     @jidouteki.series.chapters
     def _chapters(self, series):
