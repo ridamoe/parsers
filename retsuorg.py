@@ -25,8 +25,8 @@ class Retsu(Config):
     def _series_cover(self, series): 
         d = self._fetch_series(series)
         d = d.css(".summary_image img")
-        
-        return d["data-src"]
+        for el in d:
+            return el["data-src"]
     
     @jidouteki.series.title
     def _series_title(self, series): 
