@@ -49,7 +49,16 @@ class Manganato(Config):
     def _series_title(self, series):
         for d in self._fetch_series(series):
             d = self._fetch_series(series).css(".story-info-right > h1")
-            if d["text"]: return d["text"]
+            for el in d:
+                    if el["text"]: return el["text"]
+        return None
+
+    @jidouteki.series.cover
+    def _series_cover(self, series):
+        for d in self._fetch_series(series):
+            d = self._fetch_series(series).css(".story-info-left > .info-image > img")
+            for el in d:
+                if el["src"]: return el["src"]
         return None
     
     @jidouteki.images
