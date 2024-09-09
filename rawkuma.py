@@ -46,7 +46,9 @@ class Rawkuma(Config):
   def _title(self, series):
       d = self._fetch_series(series)
       d = d.css(".ts-breadcrumb.bixbox > div > span:last-child > a > span[itemprop=name]")
-      return d["text"]
+      for el in d: 
+        return el.get_text("text")
+      return None
   
   @jidouteki.images
   def _images(self, series, chapter):
