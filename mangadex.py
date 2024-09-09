@@ -45,8 +45,8 @@ class Mangadex(Config):
             if chapter["type"] != "chapter": continue
             chapter = Chapter(
                 params = { "chapter": get(chapter, "id") },
-                volume = str(get(chapter, "attributes.volume")),
-                chapter = str(get(chapter, "attributes.chapter")),
+                volume = get(chapter, "attributes.volume"),
+                chapter = get(chapter, "attributes.chapter"),
                 title = get(chapter, "attributes.title"),
                 language = get(chapter, "attributes.translatedLanguage"),
             )
