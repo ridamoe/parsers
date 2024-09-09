@@ -29,7 +29,7 @@ class Rawkuma(Config):
       ret = []
       for el in d.css("#chapterlist li"):
         chapter = Chapter(
-          props = { "chapter": el["data-num"]},
+          params = { "chapter": el["data-num"]},
           chapter =  el["data-num"]
         )
         ret.append(chapter)
