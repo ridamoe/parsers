@@ -43,13 +43,13 @@ class Rawkuma(Config):
 
 
   @jidouteki.series.title
-  def _cover(self, series):
+  def _title(self, series):
       d = self._fetch_series(series)
       d = d.css(".ts-breadcrumb.bixbox > div > span:last-child > a > span[itemprop=name]")
       return d["text"]
   
   @jidouteki.images
-  def _cover(self, series, chapter):
+  def _images(self, series, chapter):
       d = self.fetch(f"/{series}-chapter-{chapter}")
       d = d.css("#readerarea img")
       return [el["src"] for el in d] 
