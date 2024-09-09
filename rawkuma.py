@@ -39,7 +39,8 @@ class Rawkuma(Config):
   @jidouteki.series.cover
   def _cover(self, series):
       d = self._fetch_series(series).css(".thumbook .thumb img")
-      return d["src"]
+      for el in d:
+        return el["src"]
 
 
   @jidouteki.series.title
