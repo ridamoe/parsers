@@ -50,7 +50,8 @@ class Manganato(Config):
         for d in self._fetch_series(series):
             d = self._fetch_series(series).css(".story-info-right > h1")
             for el in d:
-                    if el["text"]: return el["text"]
+                text = el.get_text()
+                if text: return text
         return None
 
     @jidouteki.series.cover
