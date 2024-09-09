@@ -25,7 +25,7 @@ class Mangadex(Config):
     @jidouteki.series.title
     def _series_title(self, series):
         d = self._fetch_series(series).json()
-        return get(d, "data.attributes.title").values()[0]
+        return list(get(d, ("data.attributes.title")).values()).pop()
 
     @jidouteki.series.cover
     def _series_cover(self, series):
