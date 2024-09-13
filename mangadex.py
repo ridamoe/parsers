@@ -61,5 +61,11 @@ class Mangadex(Config):
         images = []
         base = f"{get(d, 'baseUrl')}/data/{get(d, 'chapter.hash')}"
         for chapter_data in get(d, "chapter.data"):
-            images.append(f"{base}/{chapter_data}")
+            url = f"{base}/{chapter_data}"
+            
+            # Hotlinking mostly works but it's forbidden by mangadex policies
+            # see: https://api.mangadex.org/docs/2-limitations/#general-connection-requirements
+            proxied = self.proxy(url, headers={"referer": "https://mangadex.org/"})
+            
+            images.append(proxied)
         return images
