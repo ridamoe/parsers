@@ -1,6 +1,7 @@
 import jidouteki
 from jidouteki import Config, Metadata, Chapter
 from jidouteki.utils import get
+import re
 
 @jidouteki.register
 class Mangadex(Config):
@@ -13,11 +14,22 @@ class Mangadex(Config):
         )
 
     @jidouteki.match
-    def _match(self):
-        return [
-            r"https://mangadex.org/title/(?P<series>[0-9a-f\-]*)",
-            r"https://mangadex.org/chapter/(?P<chapter>[0-9a-f\-]*)"
-        ]
+    def _match(self, url):
+        SERIES_MATCH = r"https://mangadex.org/title/(?P<series>[0-9a-f\-]*)"
+        if (m := re.match(SERIES_MATCH, url)): return m.groupdict()
+
+        CHAPTER_MATCH = r"https://mangadex.org/chapter/(?P<chapter>[0-9a-f\-]*)"
+        if (m := re.match(CHAPTER_MATCH, url)):
+            match = m.groupdict()
+            
+            d  = self.fetch(f"/chapter/{match.get("chapter")}").json()
+            relationships = get(d, "data.relationships")
+            manga = next((rel for rel in relationships if rel["type"] == "manga"), {})
+            
+            return  {
+                **match,
+                "series": manga.get("id")
+            }
     
     def _fetch_series(self, series):
         return self.fetch(f"/manga/{series}/?includes[]=cover_art")
