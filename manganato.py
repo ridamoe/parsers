@@ -11,13 +11,15 @@ class Manganato(Config):
         )
 
     @jidouteki.match
-    def _match(self):
-        return [
+    def _match(self, url):
+        patterns = (
         r"https://chapmanganato\.to/manga-(?P<series>[a-z0-9]*)/chapter-(?P<chapter>.*?)(?:[/?#].*|)$",
         # - manganato.com chapter url?
         r"https://manganato\.com/manga-(?P<series>[a-z0-9]*)",
         r"https://chapmanganato\.to/manga-(?P<series>[a-z0-9]*)",
-        ]
+        )
+        
+        return jidouteki.utils.match_groups(patterns, url)
 
     def _fetch_series(self, series) -> FetchedData:
         return self.fetch([

@@ -12,10 +12,12 @@ class GDrive(Config):
         )
 
     @jidouteki.match
-    def _match(self):
-        return (
+    def _match(self, url):
+        patterns = (
             r"https://drive\.google\.com/drive/folders/(?P<folderId>.*?)(?:[/?].*|)$",
         )
+        
+        return jidouteki.utils.match_groups(patterns, url)
   
     @jidouteki.images
     def _images(self, folderId):

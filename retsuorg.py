@@ -12,11 +12,13 @@ class Retsu(Config):
         )
 
     @jidouteki.match
-    def _match(self):
-        return (
+    def _match(self, url):
+        patterns = (
             r"https://retsu\.org/manga/(?P<series>.*?)/(?:ch|chapter)-(?P<chapter>.*?)(?:[/?].*|)$",
             r"https://retsu\.org/manga/(?P<series>.*?)(?:[/?].*|)$"
-        ) 
+        )
+        
+        return jidouteki.utils.match_groups(patterns, url)
 
     def _fetch_series(self, series):
         return self.fetch(f"/manga/{series}")
