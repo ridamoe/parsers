@@ -2,6 +2,7 @@ import jidouteki
 from jidouteki import Config, Metadata, Chapter
 from jidouteki.utils import get
 import re
+import urllib.parse
 
 @jidouteki.register
 class Mangadex(Config):
@@ -52,20 +53,39 @@ class Mangadex(Config):
     def _series_chapters(self, series):
         chapters = []
         
-        data = self.fetch(f"/manga/{series}/feed").json()
-        for chapter in data["data"]:
-            if chapter["type"] != "chapter": continue
-            chapter = Chapter(
-                params = { "chapter": get(chapter, "id") },
-                volume = get(chapter, "attributes.volume"),
-                chapter = get(chapter, "attributes.chapter"),
-                title = get(chapter, "attributes.title"),
-                language = get(chapter, "attributes.translatedLanguage"),
-            )
-            chapters.append(chapter)
+        for data in self._paginate(f"/manga/{series}/feed"):
+            for chapter in data["data"]:
+                if chapter["type"] != "chapter": continue
+                chapter = Chapter(
+                    params = { "chapter": get(chapter, "id") },
+                    volume = get(chapter, "attributes.volume"),
+                    chapter = get(chapter, "attributes.chapter"),
+                    title = get(chapter, "attributes.title"),
+                    language = get(chapter, "attributes.translatedLanguage"),
+                )
+                chapters.append(chapter)
         
         return chapters
     
+    def _paginate(self, url):
+        # Some endpoints are paginated.
+        # see: https://api.mangadex.org/docs/01-concepts/pagination/
+        d = self.fetch(url).json()
+        yield d
+        
+        limit = d["limit"]
+        total = d["total"]
+        
+        url_parts = urllib.parse.urlparse(url)
+        query = urllib.parse.parse_qsl(url_parts.query)
+        for current_offset in range(limit, total, limit):
+            new_query = query
+            new_query.append(("offset", current_offset))            
+            enc_query = urllib.parse.urlencode(new_query, doseq=True) 
+            new_url = url_parts._replace(query=enc_query).geturl()
+            
+            yield self.fetch(new_url).json()
+        
     @jidouteki.images
     def _images(self, chapter):
         d = self.fetch(f"/at-home/server/{chapter}?includes[]=scanlation_group").json()
