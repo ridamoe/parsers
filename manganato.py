@@ -50,7 +50,7 @@ class Manganato(Config):
     @jidouteki.series.title
     def _series_title(self, series):
         for d in self._fetch_series(series):
-            d = self._fetch_series(series).css(".story-info-right > h1")
+            d = d.css(".story-info-right > h1")
             for el in d:
                 text = el.get_text()
                 if text: return text
@@ -59,7 +59,7 @@ class Manganato(Config):
     @jidouteki.series.cover
     def _series_cover(self, series):
         for d in self._fetch_series(series):
-            d = self._fetch_series(series).css(".story-info-left > .info-image > img")
+            d = d.css(".story-info-left > .info-image > img")
             for el in d:
                 if el["src"]: return el["src"]
         return None
