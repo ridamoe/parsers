@@ -27,12 +27,16 @@ class Rawkuma(Config):
   @jidouteki.series.chapters
   def _chapters(self, series):
       d = self._fetch_series(series)
+      LANG = { "manga": "ja", "manhwa": "ko", "manhua": "zh" }
+      type  = d.css(".tsinfo > .imptdt:nth-child(2) > a")[0].get_text()
+      lang =  LANG[type.lower()]
       
       ret = []
       for el in d.css("#chapterlist li"):
         chapter = Chapter(
           params = { "chapter": el["data-num"]},
-          chapter =  el["data-num"]
+          chapter =  el["data-num"],
+          language = lang
         )
         ret.append(chapter)
       return list(reversed(ret))
