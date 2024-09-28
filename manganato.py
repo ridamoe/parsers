@@ -1,17 +1,17 @@
-from jidouteki import Config, Metadata, Chapter, FetchedData
 import jidouteki 
+from jidouteki import *
 
 @jidouteki.register
-class Manganato(Config):
+class Manganato(ProviderConfig):
     @jidouteki.meta
     def _meta(self):
         return Metadata(
-        key = "manganato",
-        display_name = "Manganato"
+            key = "manganato",
+            display_name = "Manganato"
         )
 
     @jidouteki.match
-    def _match(self, url):
+    def match(self, url):
         patterns = (
         r"https://chapmanganato\.to/manga-(?P<series>[a-z0-9]*)/chapter-(?P<chapter>.*?)(?:[/?#].*|)$",
         # - manganato.com chapter url?
@@ -21,20 +21,20 @@ class Manganato(Config):
         
         return jidouteki.utils.match_groups(patterns, url)
 
-    def _fetch_series(self, series) -> FetchedData:
-        return self.fetch([
+    def fetch_series(self, series) -> FetchedData:
+        return self.utils.fetch([
             f"https://manganato.com/manga-{series}",
             f"https://chapmanganato.to/manga-{series}"
         ])
 
     @jidouteki.series.chapters
-    def _series_chapters(self, series):
-        for d in self._fetch_series(series):
+    def series_chapters(self, series):
+        for d in self.fetch_series(series):
             d = d.css(".row-content-chapter > li > a.chapter-name")
             
             chapters = []
             for el in d:
-                params = self.match(el["href"])
+                params = self.utils.provider.match(el["href"])
                 chapter = Chapter(
                     params=params,
                     chapter=params["chapter"],
@@ -48,8 +48,8 @@ class Manganato(Config):
         return []
         
     @jidouteki.series.title
-    def _series_title(self, series):
-        for d in self._fetch_series(series):
+    def series_title(self, series):
+        for d in self.fetch_series(series):
             d = d.css(".story-info-right > h1")
             for el in d:
                 text = el.get_text()
@@ -57,20 +57,20 @@ class Manganato(Config):
         return None
 
     @jidouteki.series.cover
-    def _series_cover(self, series):
-        for d in self._fetch_series(series):
+    def series_cover(self, series):
+        for d in self.fetch_series(series):
             d = d.css(".story-info-left > .info-image > img")
             for el in d:
                 if el["src"]: return el["src"]
         return None
     
     @jidouteki.images
-    def _images(self, series, chapter):
-        d = self.fetch(f"https://chapmanganato.to/manga-{series}/chapter-{chapter}")
+    def images(self, series, chapter):
+        d = self.utils.fetch(f"https://chapmanganato.to/manga-{series}/chapter-{chapter}")
         d = d.css(".container-chapter-reader > img")
         
         ret = []
         for el in d:
             url = el["src"]
-            ret.append(self.proxy(url, headers={"referer": "https://chapmanganato.to/"}))
+            ret.append(self.utils.proxy(url, headers={"referer": "https://chapmanganato.to/"}))
         return ret

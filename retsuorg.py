@@ -1,10 +1,10 @@
-from jidouteki import Metadata, Config, Chapter
+from jidouteki import Metadata, ProviderConfig, Chapter
 import jidouteki
 
 @jidouteki.register
-class Retsu(Config):
+class Retsu(ProviderConfig):
     @jidouteki.meta
-    def _meta(self):
+    def meta(self):
         return Metadata(
             key = "retsuorg",
             display_name = "Retsu.org",
@@ -12,7 +12,7 @@ class Retsu(Config):
         )
 
     @jidouteki.match
-    def _match(self, url):
+    def match(self, url):
         patterns = (
             r"https://retsu\.org/manga/(?P<series>.*?)/(?:ch|chapter)-(?P<chapter>.*?)(?:[/?].*|)$",
             r"https://retsu\.org/manga/(?P<series>.*?)(?:[/?].*|)$"
@@ -20,25 +20,25 @@ class Retsu(Config):
         
         return jidouteki.utils.match_groups(patterns, url)
 
-    def _fetch_series(self, series):
-        return self.fetch(f"/manga/{series}")
+    def fetch_series(self, series):
+        return self.utils.fetch(f"/manga/{series}")
     
     @jidouteki.series.cover
-    def _series_cover(self, series): 
-        d = self._fetch_series(series)
+    def series_cover(self, series): 
+        d = self.fetch_series(series)
         d = d.css(".summary_image img")
         for el in d:
             return el["data-src"]
     
     @jidouteki.series.title
-    def _series_title(self, series): 
-        d = self._fetch_series(series)
+    def series_title(self, series): 
+        d = self.fetch_series(series)
         d = d.css("h1.post-title").pop()        
         return d.get_text()
 
     @jidouteki.series.chapters
-    def _chapters(self, series):
-        d = self._fetch_series(series)
+    def chapters(self, series):
+        d = self.fetch_series(series)
         d = d.css(".wp-manga-chapter > a")
         chapters = []
         for el in d:
@@ -52,8 +52,8 @@ class Retsu(Config):
         return chapters
 
     @jidouteki.images
-    def _images(self, series, chapter):
-        for d in self.fetch(f"/manga/{series}/", [f"ch-{chapter:0>3}",  f"chapter-{chapter}"]):
+    def images(self, series, chapter):
+        for d in self.utils.fetch(f"/manga/{series}/", [f"ch-{chapter:0>3}",  f"chapter-{chapter}"]):
             d = d.css(".reading-content img")
 
             images = []

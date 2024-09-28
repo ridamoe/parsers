@@ -1,13 +1,13 @@
 import jidouteki
-from jidouteki import Config, Metadata, Chapter
+from jidouteki import ProviderConfig, Metadata, Chapter
 from jidouteki.utils import get
 import re
 import urllib.parse
 
 @jidouteki.register
-class Mangadex(Config):
+class Mangadex(ProviderConfig):
     @jidouteki.meta
-    def _metadata(self) -> Metadata: 
+    def meta(self) -> Metadata: 
         return Metadata(
             base='https://api.mangadex.org/',
             key='mangadex',
@@ -15,7 +15,7 @@ class Mangadex(Config):
         )
 
     @jidouteki.match
-    def _match(self, url):
+    def match(self, url):
         SERIES_MATCH = r"https://mangadex.org/title/(?P<series>[0-9a-f\-]*)"
         if (m := re.match(SERIES_MATCH, url)): return m.groupdict()
 
@@ -23,7 +23,7 @@ class Mangadex(Config):
         if (m := re.match(CHAPTER_MATCH, url)):
             match = m.groupdict()
             
-            d  = self.fetch(f"/chapter/{match.get("chapter")}").json()
+            d  = self.utils.fetch(f"/chapter/{match.get("chapter")}").json()
             relationships = get(d, "data.relationships")
             manga = next((rel for rel in relationships if rel["type"] == "manga"), {})
             
@@ -32,17 +32,17 @@ class Mangadex(Config):
                 "series": manga.get("id")
             }
     
-    def _fetch_series(self, series):
-        return self.fetch(f"/manga/{series}/?includes[]=cover_art")
+    def fetch_series(self, series):
+        return self.utils.fetch(f"/manga/{series}/?includes[]=cover_art")
     
     @jidouteki.series.title
-    def _series_title(self, series):
-        d = self._fetch_series(series).json()
+    def series_title(self, series):
+        d = self.fetch_series(series).json()
         return list(get(d, ("data.attributes.title")).values()).pop()
 
     @jidouteki.series.cover
-    def _series_cover(self, series):
-        d = self._fetch_series(series).json()
+    def series_cover(self, series):
+        d = self.fetch_series(series).json()
         relationships = get(d, "data.relationships")
         cover_art = next((rel for rel in relationships if rel["type"] == "cover_art"), None)
         if cover_art:
@@ -50,10 +50,10 @@ class Mangadex(Config):
             return f"https://uploads.mangadex.org/covers/{series}/{file}"
         
     @jidouteki.series.chapters
-    def _series_chapters(self, series):
+    def series_chapters(self, series):
         chapters = []
         
-        for data in self._paginate(f"/manga/{series}/feed"):
+        for data in self.paginate(f"/manga/{series}/feed"):
             for chapter in data["data"]:
                 if chapter["type"] != "chapter": continue
                 chapter = Chapter(
@@ -67,10 +67,10 @@ class Mangadex(Config):
         
         return chapters
     
-    def _paginate(self, url):
+    def paginate(self, url):
         # Some endpoints are paginated.
         # see: https://api.mangadex.org/docs/01-concepts/pagination/
-        d = self.fetch(url).json()
+        d = self.utils.fetch(url).json()
         yield d
         
         limit = d["limit"]
@@ -84,11 +84,11 @@ class Mangadex(Config):
             enc_query = urllib.parse.urlencode(new_query, doseq=True) 
             new_url = url_parts._replace(query=enc_query).geturl()
             
-            yield self.fetch(new_url).json()
+            yield self.utils.fetch(new_url).json()
         
     @jidouteki.images
-    def _images(self, chapter):
-        d = self.fetch(f"/at-home/server/{chapter}?includes[]=scanlation_group").json()
+    def images(self, chapter):
+        d = self.utils.fetch(f"/at-home/server/{chapter}?includes[]=scanlation_group").json()
                 
         images = []
         base = f"{get(d, 'baseUrl')}/data/{get(d, 'chapter.hash')}"
@@ -97,7 +97,7 @@ class Mangadex(Config):
             
             # Hotlinking mostly works but it's forbidden by mangadex policies
             # see: https://api.mangadex.org/docs/2-limitations/#general-connection-requirements
-            proxied = self.proxy(url, headers={"referer": "https://mangadex.org/"})
+            proxied = self.utils.proxy(url, headers={"referer": "https://mangadex.org/"})
             
             images.append(proxied)
         return images

@@ -2,9 +2,9 @@ import jidouteki
 from jidouteki import *
 
 @jidouteki.register
-class GDrive(Config):
+class GDrive(ProviderConfig):
     @jidouteki.meta
-    def _meta(self):
+    def meta(self):
         return Metadata(
             base = 'https://drive.google.com/',
             key = 'google-drive',
@@ -12,7 +12,7 @@ class GDrive(Config):
         )
 
     @jidouteki.match
-    def _match(self, url):
+    def match(self, url):
         patterns = (
             r"https://drive\.google\.com/drive/folders/(?P<folderId>.*?)(?:[/?].*|)$",
         )
@@ -20,8 +20,8 @@ class GDrive(Config):
         return jidouteki.utils.match_groups(patterns, url)
   
     @jidouteki.images
-    def _images(self, folderId):
-        d = self.fetch(f"/drive/folders/{folderId}")
+    def images(self, folderId):
+        d = self.utils.fetch(f"/drive/folders/{folderId}")
         d = d.css("c-wiz > div[data-id]")
         
         images = []
