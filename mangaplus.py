@@ -101,10 +101,12 @@ class Mangaplus(ProviderConfig):
         chapter_groups = chapter_groups if isinstance(chapter_groups, list) else [chapter_groups]
         
         for g in chapter_groups:
-            for key, value in  g.items():
-                if key != "1":
+            for value in g.values():
+                if isinstance(value, list):
                     chapter_data.extend(value)
-                    
+        
+        assert all([isinstance(v, dict) for v in chapter_data]), "Not all chapter_data elements are objects"
+
         chapters  = []
         for d in chapter_data:
             # series = d["1"]
