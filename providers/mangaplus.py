@@ -101,10 +101,13 @@ class Mangaplus(ProviderConfig):
         chapter_groups = chapter_groups if isinstance(chapter_groups, list) else [chapter_groups]
         
         for g in chapter_groups:
-            for value in g.values():
-                if isinstance(value, list):
-                    chapter_data.extend(value)
-        
+            for key, value in g.items():
+                if key != "1":
+                    if isinstance(value, list):
+                        chapter_data.extend(value)
+                    elif isinstance(value, dict): # A single chapter is stored directly as a dict
+                        chapter_data.append(value)
+                        
         assert all([isinstance(v, dict) for v in chapter_data]), "Not all chapter_data elements are objects"
 
         chapters  = []
@@ -128,7 +131,10 @@ class Mangaplus(ProviderConfig):
                 title = title,
                 language = "en",
             ))
-
+        import logging
+        import base64
+        logging.log(logging.DEBUG, base64.b64encode(json.dumps(details).encode()))
+        logging.log(logging.DEBUG, chapter_data)
         return chapters
 
     @jidouteki.series.title
