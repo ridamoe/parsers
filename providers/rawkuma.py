@@ -61,7 +61,12 @@ class Rawkuma(ProviderConfig):
   def images(self, series, chapter):
       d = self.utils.fetch(f"/{series}-chapter-{chapter}")
       d = d.css("#readerarea img")
-      return [el["src"] for el in d] 
+      
+      ret = []
+      for el in d:
+         url = el["src"]
+         ret.append(self.utils.proxy(url, headers={"referer": "https://rawkuma.com/"}))
+      return ret
       
   # search:
   #   fetcher:
