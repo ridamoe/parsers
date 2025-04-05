@@ -10,8 +10,8 @@ import re
 SECRET_KEY = "4Kin9vGg"
 APP_PARAMS = {
     "os": "android",
-    "os_ver": "34",
-    "app_ver": 169
+    "os_ver": "35",
+    "app_ver": 199
 }
 
 def md5(string: str):
