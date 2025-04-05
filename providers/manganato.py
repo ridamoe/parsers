@@ -13,19 +13,16 @@ class Manganato(ProviderConfig):
     @jidouteki.match
     def match(self, url):
         patterns = (
-        r"https://chapmanganato\.to/manga-(?P<series>[a-z0-9]*)/chapter-(?P<chapter>.*?)(?:[/?#].*|)$",
-        # - manganato.com chapter url?
-        r"https://manganato\.com/manga-(?P<series>[a-z0-9]*)",
-        r"https://chapmanganato\.to/manga-(?P<series>[a-z0-9]*)",
+        r"https://natomanga\.com/manga-(?P<series>[a-z0-9]*)/chapter-(?P<chapter>.*?)(?:[/?#].*|)$",
+        r"https://natomanga\.com/manga-(?P<series>[a-z0-9]*)",
         )
         
         return jidouteki.utils.match_groups(patterns, url)
 
     def fetch_series(self, series) -> FetchedData:
-        return self.utils.fetch([
-            f"https://manganato.com/manga-{series}",
-            f"https://chapmanganato.to/manga-{series}"
-        ])
+        return self.utils.fetch(
+            f"https://natomanga.com/manga-{series}",
+        )
 
     @jidouteki.series.chapters
     def series_chapters(self, series):
@@ -66,11 +63,11 @@ class Manganato(ProviderConfig):
     
     @jidouteki.images
     def images(self, series, chapter):
-        d = self.utils.fetch(f"https://chapmanganato.to/manga-{series}/chapter-{chapter}")
+        d = self.utils.fetch(f"https://natomanga.com/manga-{series}/chapter-{chapter}")
         d = d.css(".container-chapter-reader > img")
         
         ret = []
         for el in d:
             url = el["src"]
-            ret.append(self.utils.proxy(url, headers={"referer": "https://chapmanganato.to/"}))
+            ret.append(self.utils.proxy(url, headers={"referer": "https://natomanga.com/"}))
         return ret
