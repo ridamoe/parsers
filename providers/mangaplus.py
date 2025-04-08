@@ -31,7 +31,7 @@ class Mangaplus(ProviderConfig):
             self._secret = self.get_secret(*self.gen_register_params())
         return self._secret
     
-    @jidouteki.meta
+    @property
     def meta(self):
         return jidouteki.Metadata(
             key = "mangaplus",

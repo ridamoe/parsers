@@ -5,7 +5,7 @@ import re
 import urllib.parse
 
 class Mangadex(ProviderConfig):
-    @jidouteki.meta
+    @property
     def meta(self) -> Metadata: 
         return Metadata(
             base='https://api.mangadex.org/',

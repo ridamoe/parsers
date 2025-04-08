@@ -2,7 +2,7 @@ import jidouteki
 from jidouteki import *
 
 class GDrive(ProviderConfig):
-    @jidouteki.meta
+    @property
     def meta(self):
         return Metadata(
             base = 'https://drive.google.com/',

@@ -2,7 +2,7 @@ from jidouteki import Metadata, ProviderConfig, Chapter
 import jidouteki
 
 class Retsu(ProviderConfig):
-    @jidouteki.meta
+    @property
     def meta(self):
         return Metadata(
             key = "retsuorg",

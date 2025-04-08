@@ -2,8 +2,8 @@ import jidouteki
 from jidouteki import *
 
 class Manganato(ProviderConfig):
-    @jidouteki.meta
-    def _meta(self):
+    @property
+    def meta(self):
         return Metadata(
             key = "manganato",
             display_name = "Manganato"

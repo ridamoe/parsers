@@ -2,8 +2,7 @@ from jidouteki import Metadata, ProviderConfig, Chapter
 import jidouteki
 
 class Rawkuma(ProviderConfig):
-    
-  @jidouteki.meta
+  @property
   def meta(self):
     return Metadata(
       key = "rawkuma",
