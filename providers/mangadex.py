@@ -4,7 +4,6 @@ from jidouteki.utils import get
 import re
 import urllib.parse
 
-@jidouteki.register
 class Mangadex(ProviderConfig):
     @jidouteki.meta
     def meta(self) -> Metadata: 

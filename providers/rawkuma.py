@@ -1,7 +1,6 @@
 from jidouteki import Metadata, ProviderConfig, Chapter
 import jidouteki
 
-@jidouteki.register
 class Rawkuma(ProviderConfig):
     
   @jidouteki.meta

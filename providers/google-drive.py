@@ -1,7 +1,6 @@
 import jidouteki
 from jidouteki import *
 
-@jidouteki.register
 class GDrive(ProviderConfig):
     @jidouteki.meta
     def meta(self):

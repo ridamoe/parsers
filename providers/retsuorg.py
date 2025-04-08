@@ -1,7 +1,6 @@
 from jidouteki import Metadata, ProviderConfig, Chapter
 import jidouteki
 
-@jidouteki.register
 class Retsu(ProviderConfig):
     @jidouteki.meta
     def meta(self):

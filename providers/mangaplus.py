@@ -17,7 +17,6 @@ APP_PARAMS = {
 def md5(string: str):
     return hashlib.md5(string.encode()).digest().hex()
 
-@jidouteki.register
 class Mangaplus(ProviderConfig):
     def __init__(self, context: jidouteki.Jidouteki) -> None:
         super().__init__(context)

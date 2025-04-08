@@ -1,7 +1,6 @@
 import jidouteki 
 from jidouteki import *
 
-@jidouteki.register
 class Manganato(ProviderConfig):
     @jidouteki.meta
     def _meta(self):
