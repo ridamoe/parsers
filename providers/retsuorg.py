@@ -20,7 +20,7 @@ class Retsu(ProviderConfig):
         return jidouteki.utils.match_groups(patterns, url)
 
     def fetch_series(self, series):
-        return self.utils.fetch(f"/manga/{series}")
+        return self.fetch(f"/manga/{series}")
     
     @jidouteki.series.cover
     def series_cover(self, series): 
@@ -52,7 +52,7 @@ class Retsu(ProviderConfig):
 
     @jidouteki.images
     def images(self, series, chapter):
-        for d in self.utils.fetch(f"/manga/{series}/", [f"ch-{chapter:0>3}",  f"chapter-{chapter}"]):
+        for d in self.fetch(f"/manga/{series}/", [f"ch-{chapter:0>3}",  f"chapter-{chapter}"]):
             d = d.css(".reading-content img")
 
             images = []

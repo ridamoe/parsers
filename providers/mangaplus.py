@@ -64,7 +64,7 @@ class Mangaplus(ProviderConfig):
     
     # Register new device given a token and a key
     def get_secret(self, token, key):
-        result = self.utils.fetch("/api/register", 
+        result = self.fetch("/api/register", 
                             method="PUT",
                             params = { 
                                     "device_token": token, 
@@ -79,7 +79,7 @@ class Mangaplus(ProviderConfig):
             return secret
     
     def fetch_title_details(self, series):
-        result = self.utils.fetch("/api/title_detailV3", params = {
+        result = self.fetch("/api/title_detailV3", params = {
             "title_id": series,
             **APP_PARAMS,
             "secret": self.secret,
@@ -147,7 +147,7 @@ class Mangaplus(ProviderConfig):
         return get(d, "1.8.1.4")
     
     def fetch_viewer(self, chapter):
-        result = self.utils.fetch("/api/manga_viewer", params = {        
+        result = self.fetch("/api/manga_viewer", params = {        
             "chapter_id": chapter,
             "split": "yes",
             "img_quality": "super_high",

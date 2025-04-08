@@ -20,7 +20,7 @@ class Rawkuma(ProviderConfig):
     return jidouteki.utils.match_groups(patterns, url)
 
   def fetch_series(self, series):
-    return self.utils.fetch(f"/manga/{series}")
+    return self.fetch(f"/manga/{series}")
    
   @jidouteki.series.chapters
   def chapters(self, series):
@@ -57,13 +57,13 @@ class Rawkuma(ProviderConfig):
   
   @jidouteki.images
   def images(self, series, chapter):
-      d = self.utils.fetch(f"/{series}-chapter-{chapter}")
+      d = self.fetch(f"/{series}-chapter-{chapter}")
       d = d.css("#readerarea img")
       
       ret = []
       for el in d:
          url = el["src"]
-         ret.append(self.utils.proxy(url, headers={"referer": "https://rawkuma.com/"}))
+         ret.append(self.proxy(url, headers={"referer": "https://rawkuma.com/"}))
       return ret
       
   # search:

@@ -20,7 +20,7 @@ class GDrive(ProviderConfig):
   
     @jidouteki.images
     def images(self, folderId):
-        d = self.utils.fetch(f"/drive/folders/{folderId}")
+        d = self.fetch(f"/drive/folders/{folderId}")
         d = d.css("c-wiz > div[data-id]")
         
         images = []
