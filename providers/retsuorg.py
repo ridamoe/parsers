@@ -10,7 +10,7 @@ class Retsu(ProviderConfig):
             base = "https://retsu.org"    
         )
 
-    @jidouteki.match
+    @jidouteki.map.match
     def match(self, url):
         patterns = (
             r"https://retsu\.org/manga/(?P<series>.*?)/(?:ch|chapter)-(?P<chapter>.*?)(?:[/?].*|)$",
@@ -22,20 +22,20 @@ class Retsu(ProviderConfig):
     def fetch_series(self, series):
         return self.fetch(f"/manga/{series}")
     
-    @jidouteki.series.cover
+    @jidouteki.map.series.cover
     def series_cover(self, series): 
         d = self.fetch_series(series)
         d = d.css(".summary_image img")
         for el in d:
             return el["data-src"]
     
-    @jidouteki.series.title
+    @jidouteki.map.series.title
     def series_title(self, series): 
         d = self.fetch_series(series)
         d = d.css("h1.post-title").pop()        
         return d.get_text()
 
-    @jidouteki.series.chapters
+    @jidouteki.map.series.chapters
     def chapters(self, series):
         d = self.fetch_series(series)
         d = d.css(".wp-manga-chapter > a")
@@ -50,7 +50,7 @@ class Retsu(ProviderConfig):
             chapters.append(chapter)
         return chapters
 
-    @jidouteki.images
+    @jidouteki.map.images
     def images(self, series, chapter):
         for d in self.fetch(f"/manga/{series}/", [f"ch-{chapter:0>3}",  f"chapter-{chapter}"]):
             d = d.css(".reading-content img")

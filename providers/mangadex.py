@@ -13,7 +13,7 @@ class Mangadex(ProviderConfig):
             display_name='Mangadex'
         )
 
-    @jidouteki.match
+    @jidouteki.map.match
     def match(self, url):
         SERIES_MATCH = r"https://mangadex.org/title/(?P<series>[0-9a-f\-]*)"
         if (m := re.match(SERIES_MATCH, url)): return m.groupdict()
@@ -34,12 +34,12 @@ class Mangadex(ProviderConfig):
     def fetch_series(self, series):
         return self.fetch(f"/manga/{series}/?includes[]=cover_art")
     
-    @jidouteki.series.title
+    @jidouteki.map.series.title
     def series_title(self, series):
         d = self.fetch_series(series).json()
         return list(get(d, ("data.attributes.title")).values()).pop()
 
-    @jidouteki.series.cover
+    @jidouteki.map.series.cover
     def series_cover(self, series):
         d = self.fetch_series(series).json()
         relationships = get(d, "data.relationships")
@@ -48,7 +48,7 @@ class Mangadex(ProviderConfig):
             file = get(cover_art, "attributes.fileName")
             return f"https://uploads.mangadex.org/covers/{series}/{file}"
         
-    @jidouteki.series.chapters
+    @jidouteki.map.series.chapters
     def series_chapters(self, series):
         chapters = []
         
@@ -85,7 +85,7 @@ class Mangadex(ProviderConfig):
             
             yield self.fetch(new_url).json()
         
-    @jidouteki.images
+    @jidouteki.map.images
     def images(self, chapter):
         d = self.fetch(f"/at-home/server/{chapter}?includes[]=scanlation_group").json()
                 

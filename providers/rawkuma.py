@@ -10,7 +10,7 @@ class Rawkuma(ProviderConfig):
       base = "https://rawkuma.com/"
     )
   
-  @jidouteki.match
+  @jidouteki.map.match
   def match(self, url):
     patterns =  (
       r"https://rawkuma\.com/(?P<series>.*?)-chapter-(?P<chapter>.*?)(?:[/?].*|)$",
@@ -22,7 +22,7 @@ class Rawkuma(ProviderConfig):
   def fetch_series(self, series):
     return self.fetch(f"/manga/{series}")
    
-  @jidouteki.series.chapters
+  @jidouteki.map.series.chapters
   def chapters(self, series):
       d = self.fetch_series(series)
       LANG = { "manga": "ja", "manhwa": "ko", "manhua": "zh" }
@@ -40,14 +40,14 @@ class Rawkuma(ProviderConfig):
       return list(reversed(ret))
   
   
-  @jidouteki.series.cover
+  @jidouteki.map.series.cover
   def cover(self, series):
       d = self.fetch_series(series).css(".thumbook .thumb img")
       for el in d:
         return el["src"]
 
 
-  @jidouteki.series.title
+  @jidouteki.map.series.title
   def title(self, series):
       d = self.fetch_series(series)
       d = d.css(".ts-breadcrumb.bixbox > div > span:last-child > a > span[itemprop=name]")
@@ -55,7 +55,7 @@ class Rawkuma(ProviderConfig):
         return el.get_text("text")
       return None
   
-  @jidouteki.images
+  @jidouteki.map.images
   def images(self, series, chapter):
       d = self.fetch(f"/{series}-chapter-{chapter}")
       d = d.css("#readerarea img")

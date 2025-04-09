@@ -39,7 +39,7 @@ class Mangaplus(ProviderConfig):
             base = "https://jumpg-api.tokyo-cdn.com/"
         )
     
-    @jidouteki.match
+    @jidouteki.map.match
     def match(self, url):
         SERIES_MATCH = r"https://mangaplus.shueisha.co.jp/titles/(?P<series>\d+)"
         if (m := re.match(SERIES_MATCH, url)): return m.groupdict()
@@ -89,7 +89,7 @@ class Mangaplus(ProviderConfig):
         message = json.loads(message)
         return message
 
-    @jidouteki.series.chapters
+    @jidouteki.map.series.chapters
     def chapters(self, series: str):
         details = self.fetch_title_details(series)
         
@@ -136,12 +136,12 @@ class Mangaplus(ProviderConfig):
         logging.log(logging.DEBUG, chapter_data)
         return chapters
 
-    @jidouteki.series.title
+    @jidouteki.map.series.title
     def title(self, series: str):
         d = self.fetch_title_details(series)
         return get(d, "1.8.1.2")
     
-    @jidouteki.series.cover
+    @jidouteki.map.series.cover
     def cover(self, series: str):
         d = self.fetch_title_details(series)
         return get(d, "1.8.1.4")
@@ -164,7 +164,7 @@ class Mangaplus(ProviderConfig):
         message = json.loads(message)
         return message
         
-    @jidouteki.images
+    @jidouteki.map.images
     def images(self, chapter: str):
         images  = []
         d = self.fetch_viewer(chapter)        

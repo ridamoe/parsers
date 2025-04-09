@@ -10,7 +10,7 @@ class GDrive(ProviderConfig):
             display_name = 'Google drive'
         )
 
-    @jidouteki.match
+    @jidouteki.map.match
     def match(self, url):
         patterns = (
             r"https://drive\.google\.com/drive/folders/(?P<folderId>.*?)(?:[/?].*|)$",
@@ -18,7 +18,7 @@ class GDrive(ProviderConfig):
         
         return jidouteki.utils.match_groups(patterns, url)
   
-    @jidouteki.images
+    @jidouteki.map.images
     def images(self, folderId):
         d = self.fetch(f"/drive/folders/{folderId}")
         d = d.css("c-wiz > div[data-id]")
