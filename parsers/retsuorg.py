@@ -1,7 +1,7 @@
-from jidouteki import Metadata, ProviderConfig, Chapter
+from jidouteki import *
 import jidouteki
 
-class Retsu(ProviderConfig):
+class Retsu(WebsiteParser):
     @property
     def meta(self):
         return Metadata(

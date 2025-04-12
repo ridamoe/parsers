@@ -1,10 +1,10 @@
 import jidouteki
-from jidouteki import ProviderConfig, Metadata, Chapter
+from jidouteki import *
 from jidouteki.utils import get
 import re
 import urllib.parse
 
-class Mangadex(ProviderConfig):
+class Mangadex(WebsiteParser):
     @property
     def meta(self) -> Metadata: 
         return Metadata(

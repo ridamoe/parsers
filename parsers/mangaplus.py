@@ -17,7 +17,7 @@ APP_PARAMS = {
 def md5(string: str):
     return hashlib.md5(string.encode()).digest().hex()
 
-class Mangaplus(ProviderConfig):
+class Mangaplus(WebsiteParser):
     def __init__(self, context: jidouteki.Jidouteki) -> None:
         super().__init__(context)
         self._secret = None # Initialized cached secret

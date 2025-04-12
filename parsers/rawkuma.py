@@ -1,7 +1,7 @@
-from jidouteki import Metadata, ProviderConfig, Chapter
+from jidouteki import *
 import jidouteki
 
-class Rawkuma(ProviderConfig):
+class Rawkuma(WebsiteParser):
   @property
   def meta(self):
     return Metadata(

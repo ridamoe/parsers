@@ -1,7 +1,7 @@
 import jidouteki
 from jidouteki import *
 
-class GDrive(ProviderConfig):
+class GDrive(WebsiteParser):
     @property
     def meta(self):
         return Metadata(
