@@ -10,6 +10,14 @@ class Rawkuma(ProviderConfig):
       base = "https://rawkuma.com/"
     )
   
+  @jidouteki.test(
+      "https://rawkuma.com/100-man-no-inochi-no-ue-ni-ore-wa-tatte-iru-chapter-94/", 
+      {"series": "100-man-no-inochi-no-ue-ni-ore-wa-tatte-iru","chapter": "94"}
+  )
+  @jidouteki.test(
+      "https://rawkuma.com/manga/100-man-no-inochi-no-ue-ni-ore-wa-tatte-iru/", 
+      {"series": "100-man-no-inochi-no-ue-ni-ore-wa-tatte-iru"}
+  )
   @jidouteki.map.match
   def match(self, url):
     patterns =  (
@@ -22,6 +30,7 @@ class Rawkuma(ProviderConfig):
   def fetch_series(self, series):
     return self.fetch(f"/manga/{series}")
    
+  @jidouteki.test({"series": "100-man-no-inochi-no-ue-ni-ore-wa-tatte-iru"})
   @jidouteki.map.series.chapters
   def chapters(self, series):
       d = self.fetch_series(series)
@@ -39,7 +48,7 @@ class Rawkuma(ProviderConfig):
         ret.append(chapter)
       return list(reversed(ret))
   
-  
+  @jidouteki.test({"series": "100-man-no-inochi-no-ue-ni-ore-wa-tatte-iru"})
   @jidouteki.map.series.cover
   def cover(self, series):
       d = self.fetch_series(series).css(".thumbook .thumb img")
@@ -47,6 +56,7 @@ class Rawkuma(ProviderConfig):
         return el["src"]
 
 
+  @jidouteki.test({"series": "100-man-no-inochi-no-ue-ni-ore-wa-tatte-iru"})
   @jidouteki.map.series.title
   def title(self, series):
       d = self.fetch_series(series)
@@ -55,6 +65,9 @@ class Rawkuma(ProviderConfig):
         return el.get_text("text")
       return None
   
+  @jidouteki.test(
+        {"series": "100-man-no-inochi-no-ue-ni-ore-wa-tatte-iru", "chapter": "31"}
+  )
   @jidouteki.map.images
   def images(self, series, chapter):
       d = self.fetch(f"/{series}-chapter-{chapter}")

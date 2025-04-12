@@ -9,7 +9,11 @@ class GDrive(ProviderConfig):
             key = 'google-drive',
             display_name = 'Google drive'
         )
-
+    
+    @jidouteki.test(
+        "https://drive.google.com/drive/folders/1VgP78U0tZtyfz9zVnXbghyFooAZ-UuxD?usp=drive_link", 
+        {"folderId": "1VgP78U0tZtyfz9zVnXbghyFooAZ-UuxD"}
+    )
     @jidouteki.map.match
     def match(self, url):
         patterns = (
@@ -17,7 +21,8 @@ class GDrive(ProviderConfig):
         )
         
         return jidouteki.utils.match_groups(patterns, url)
-  
+    
+    @jidouteki.test({"folderId": "1VgP78U0tZtyfz9zVnXbghyFooAZ-UuxD"})
     @jidouteki.map.images
     def images(self, folderId):
         d = self.fetch(f"/drive/folders/{folderId}")

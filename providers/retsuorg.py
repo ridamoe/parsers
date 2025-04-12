@@ -9,7 +9,15 @@ class Retsu(ProviderConfig):
             display_name = "Retsu.org",
             base = "https://retsu.org"    
         )
-
+    
+    @jidouteki.test(
+        "https://retsu.org/manga/ao-no-hako/ch-130/", 
+        {"series": "ao-no-hako", "chapter": "130"}
+    )
+    @jidouteki.test(
+        "https://retsu.org/manga/haruka-reset/chapter-71/", 
+        {"series": "haruka-reset", "chapter": "71"}
+    )
     @jidouteki.map.match
     def match(self, url):
         patterns = (
@@ -22,6 +30,7 @@ class Retsu(ProviderConfig):
     def fetch_series(self, series):
         return self.fetch(f"/manga/{series}")
     
+    @jidouteki.test({"series": "haruka-reset"})
     @jidouteki.map.series.cover
     def series_cover(self, series): 
         d = self.fetch_series(series)
@@ -29,12 +38,15 @@ class Retsu(ProviderConfig):
         for el in d:
             return el["data-src"]
     
+    @jidouteki.test({"series": "haruka-reset"})
     @jidouteki.map.series.title
+    @jidouteki.test({"series": "haruka-reset"})
     def series_title(self, series): 
         d = self.fetch_series(series)
         d = d.css("h1.post-title").pop()        
         return d.get_text()
 
+    @jidouteki.test({"series": "haruka-reset"})
     @jidouteki.map.series.chapters
     def chapters(self, series):
         d = self.fetch_series(series)
@@ -49,7 +61,8 @@ class Retsu(ProviderConfig):
             )
             chapters.append(chapter)
         return chapters
-
+    
+    @jidouteki.test({"series": "haruka-reset", "chapter": "71"})
     @jidouteki.map.images
     def images(self, series, chapter):
         for d in self.fetch(f"/manga/{series}/", [f"ch-{chapter:0>3}",  f"chapter-{chapter}"]):

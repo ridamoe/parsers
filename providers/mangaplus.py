@@ -39,6 +39,15 @@ class Mangaplus(ProviderConfig):
             base = "https://jumpg-api.tokyo-cdn.com/"
         )
     
+    
+    @jidouteki.test(
+        "https://mangaplus.shueisha.co.jp/viewer/1006244", 
+        {"series": "100081", "chapter": "1006244"}
+    )
+    @jidouteki.test(
+        "https://mangaplus.shueisha.co.jp/titles/100081", 
+        {"series": "100081"}
+    )
     @jidouteki.map.match
     def match(self, url):
         SERIES_MATCH = r"https://mangaplus.shueisha.co.jp/titles/(?P<series>\d+)"
@@ -89,6 +98,8 @@ class Mangaplus(ProviderConfig):
         message = json.loads(message)
         return message
 
+    @jidouteki.test({"series": "100081"}) # chapter_groups is list
+    @jidouteki.test({"series": "100280"} ) # chapter_groups is obj
     @jidouteki.map.series.chapters
     def chapters(self, series: str):
         details = self.fetch_title_details(series)
@@ -136,11 +147,13 @@ class Mangaplus(ProviderConfig):
         logging.log(logging.DEBUG, chapter_data)
         return chapters
 
+    @jidouteki.test({"series": "100081"})
     @jidouteki.map.series.title
     def title(self, series: str):
         d = self.fetch_title_details(series)
         return get(d, "1.8.1.2")
     
+    @jidouteki.test({"series": "100081"})
     @jidouteki.map.series.cover
     def cover(self, series: str):
         d = self.fetch_title_details(series)
@@ -163,7 +176,9 @@ class Mangaplus(ProviderConfig):
         message, _ = blackboxprotobuf.protobuf_to_json(result.data)
         message = json.loads(message)
         return message
-        
+
+    @jidouteki.test({"series": "100081", "chapter": "1006245"})
+    @jidouteki.test({"series": "100280", "chapter": "1019132"}) # App-only
     @jidouteki.map.images
     def images(self, chapter: str):
         images  = []
