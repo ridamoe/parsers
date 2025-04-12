@@ -1,9 +1,9 @@
 import jidouteki
 import argparse
 
-parser = argparse.ArgumentParser(description="Run self-tests on providers.")
-parser.add_argument("keys", type=str, nargs="*", help="The keys of providers to test. By default, tests all providers.")
-parser.add_argument("-d", "--directory", type=str, help="The directory providers are stored in.", default="./providers")
+parser = argparse.ArgumentParser(description="Run self-tests on parsers.")
+parser.add_argument("keys", type=str, nargs="*", help="The keys of parsers to test. By default, tests all parsers.")
+parser.add_argument("-d", "--directory", type=str, help="The directory parsers are stored in.", default="./parsers")
 args = parser.parse_args()
 
 jdtk = jidouteki.Jidouteki(proxy=None)
