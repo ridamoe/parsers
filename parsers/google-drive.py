@@ -5,7 +5,9 @@ class GDrive(WebsiteParser):
     @property
     def meta(self):
         return Metadata(
-            base = 'https://drive.google.com/',
+            domains = [
+                Domain('https://drive.google.com/')
+            ],
             key = 'google-drive',
             display_name = 'Google drive'
         )

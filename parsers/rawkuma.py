@@ -7,7 +7,10 @@ class Rawkuma(WebsiteParser):
     return Metadata(
       key = "rawkuma",
       display_name = "Rawkuma",
-      base = "https://rawkuma.com/"
+      domains=[
+        Domain("https://rawkuma.net/"),
+        Domain("https://rawkuma.com/"),
+      ]
     )
   
   @jidouteki.test(

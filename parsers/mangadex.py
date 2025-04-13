@@ -8,7 +8,9 @@ class Mangadex(WebsiteParser):
     @property
     def meta(self) -> Metadata: 
         return Metadata(
-            base='https://api.mangadex.org/',
+            domains=[
+                Domain('https://mangadex.org', 'https://api.mangadex.org/')
+            ],
             key='mangadex',
             display_name='Mangadex'
         )

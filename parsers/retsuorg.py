@@ -7,7 +7,9 @@ class Retsu(WebsiteParser):
         return Metadata(
             key = "retsuorg",
             display_name = "Retsu.org",
-            base = "https://retsu.org"    
+            domains = [
+                Domain("https://retsu.org/"),
+            ]
         )
     
     @jidouteki.test(

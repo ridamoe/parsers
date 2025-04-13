@@ -36,9 +36,16 @@ class Mangaplus(WebsiteParser):
         return jidouteki.Metadata(
             key = "mangaplus",
             display_name = "Manga Plus",
-            base = "https://jumpg-api.tokyo-cdn.com/"
+            domains=[
+                Domain("https://mangaplus.shueisha.co.jp/", "https://jumpg-api.tokyo-cdn.com/api/")
+            ]
         )
     
+    def check_domain(self, domain):
+        # /api root is expected to return "404 Not Found"
+        if not domain.base_url: return False
+        resp = self.session.get(domain.base_url)
+        return resp.text == "404 Not Found"
     
     @jidouteki.test(
         "https://mangaplus.shueisha.co.jp/viewer/1006244", 
@@ -73,7 +80,7 @@ class Mangaplus(WebsiteParser):
     
     # Register new device given a token and a key
     def get_secret(self, token, key):
-        result = self.fetch("/api/register", 
+        result = self.fetch("register", 
                             method="PUT",
                             params = { 
                                     "device_token": token, 
@@ -88,7 +95,7 @@ class Mangaplus(WebsiteParser):
             return secret
     
     def fetch_title_details(self, series):
-        result = self.fetch("/api/title_detailV3", params = {
+        result = self.fetch("title_detailV3", params = {
             "title_id": series,
             **APP_PARAMS,
             "secret": self.secret,
@@ -160,7 +167,7 @@ class Mangaplus(WebsiteParser):
         return get(d, "1.8.1.4")
     
     def fetch_viewer(self, chapter):
-        result = self.fetch("/api/manga_viewer", params = {        
+        result = self.fetch("manga_viewer", params = {        
             "chapter_id": chapter,
             "split": "yes",
             "img_quality": "super_high",
