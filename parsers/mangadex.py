@@ -88,7 +88,7 @@ class Mangadex(WebsiteParser):
     def paginate(self, url):
         # Some endpoints are paginated.
         # see: https://api.mangadex.org/docs/01-concepts/pagination/
-        d = self.fetch(url).json()
+        d = self.fetch(url, force_refresh=True).json()
         yield d
         
         limit = d["limit"]
@@ -102,7 +102,7 @@ class Mangadex(WebsiteParser):
             enc_query = urllib.parse.urlencode(new_query, doseq=True) 
             new_url = url_parts._replace(query=enc_query).geturl()
             
-            yield self.fetch(new_url).json()
+            yield self.fetch(new_url, force_refresh=True).json()
         
     @jidouteki.test({"chapter": "578eb707-acf3-4fcd-a383-054d116cdf00"})
     @jidouteki.map.images
